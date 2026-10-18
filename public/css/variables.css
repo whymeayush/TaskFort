@@ -1,0 +1,69 @@
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Color Palette (Deep Tech Dark Theme) */
+  --bg-primary: #0a0d14;
+  --bg-surface: #111622;
+  --bg-surface-elevated: #161c2c;
+  --bg-surface-hover: #1c2336;
+  --bg-glass: rgba(17, 22, 34, 0.75);
+  --bg-glass-elevated: rgba(22, 28, 44, 0.85);
+
+  /* Primary Brand (Electric Indigo / Sapphire) */
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --primary-glow: rgba(99, 102, 241, 0.35);
+
+  /* Semantic Status Colors */
+  --color-critical: #ef4444;
+  --color-critical-bg: rgba(239, 68, 68, 0.15);
+  --color-critical-glow: rgba(239, 68, 68, 0.4);
+
+  --color-high: #f97316;
+  --color-high-bg: rgba(249, 115, 22, 0.15);
+
+  --color-medium: #eab308;
+  --color-medium-bg: rgba(234, 179, 8, 0.15);
+
+  --color-low: #3b82f6;
+  --color-low-bg: rgba(59, 130, 246, 0.15);
+
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-success-glow: rgba(16, 185, 129, 0.4);
+
+  --color-purple: #a855f7;
+  --color-purple-bg: rgba(168, 85, 247, 0.15);
+
+  /* Text Colors */
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-focus: rgba(99, 102, 241, 0.5);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.25);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}

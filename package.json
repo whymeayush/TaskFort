@@ -1,0 +1,23 @@
+{
+  "name": "newtonite-operations-hub",
+  "version": "1.0.0",
+  "description": "Newtonite Operations Hub — Operational Work Management Platform Under Pressure",
+  "scripts": {
+    "start": "node server/src/server.js",
+    "seed": "node server/src/seeds/seed.js",
+    "test": "npm --prefix server test",
+    "dev": "node server/src/server.js",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build"
+  },
+  "keywords": [
+    "newtonite",
+    "operations",
+    "mern",
+    "concurrency",
+    "idempotency"
+  ],
+  "author": "Newtonite Engineering Candidate",
+  "license": "ISC"
+}

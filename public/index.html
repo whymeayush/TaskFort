@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newtonite Operations Under Pressure | Operational Work Management</title>
+  <meta name="description" content="High-reliability internal operational work coordination platform featuring optimistic concurrency control, idempotency deduplication, role-based resource security, and real-time live sync.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation & Persona Impersonator Bar -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="logo-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">NEWTONITE <span class="brand-sub">OPS</span></h1>
+        <p class="brand-tagline">Operations Under Pressure Coordination Platform</p>
+      </div>
+    </div>
+
+    <!-- Live SSE Status Indicator -->
+    <div class="sse-status-badge" id="sse-indicator" title="Real-time multi-user synchronization active">
+      <span class="pulse-dot"></span>
+      <span class="sse-label" id="sse-label">Live Sync: Connecting...</span>
+    </div>
+
+    <!-- Persona Switcher (For Multi-User Demonstration) -->
+    <div class="persona-switcher-container">
+      <label for="persona-select" class="persona-label">Active User Persona:</label>
+      <div class="persona-select-wrapper">
+        <select id="persona-select" class="persona-select" aria-label="Select active user persona">
+          <!-- Populated dynamically -->
+        </select>
+        <span class="persona-badge" id="persona-role-badge">LEAD</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary btn-sm" id="btn-toggle-simulation" title="Open Demonstration Simulator">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+        Simulator Lab
+      </button>
+      <button class="btn btn-primary btn-sm" id="btn-new-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        New Work Item
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="main-layout">
+    <!-- Attention & Operational Health Metrics -->
+    <section class="metrics-grid" aria-label="Operational Metrics">
+      <div class="metric-card card-attention" id="card-attention" role="button" tabindex="0">
+        <div class="metric-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <div class="metric-content">
+          <span class="metric-number" id="metric-attention-count">-</span>
+          <span class="metric-title">Needs Immediate Attention</span>
+          <span class="metric-hint">Pending approvals & unassigned urgent tasks</span>
+        </div>
+      </div>
+
+      <div class="metric-card card-critical" id="card-critical" role="button" tabindex="0">
+        <div class="metric-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <div class="metric-content">
+          <span class="metric-number" id="metric-critical-count">-</span>
+          <span class="metric-title">Active Critical Incidents</span>
+          <span class="metric-hint">Production & revenue impacting</span>
+        </div>
+      </div>
+
+      <div class="metric-card card-myteam" id="card-myteam" role="button" tabindex="0">
+        <div class="metric-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <div class="metric-content">
+          <span class="metric-number" id="metric-myteam-count">-</span>
+          <span class="metric-title">Assigned to My Teams</span>
+          <span class="metric-hint">Active work in your jurisdiction</span>
+        </div>
+      </div>
+
+      <div class="metric-card card-outbox" id="card-outbox" role="button" tabindex="0">
+        <div class="metric-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+        </div>
+        <div class="metric-content">
+          <span class="metric-number" id="metric-outbox-count">0</span>
+          <span class="metric-title">Async Outbox Worker</span>
+          <span class="metric-hint" id="metric-outbox-detail">Jobs completed reliably</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Control Toolbar -->
+    <section class="toolbar-section">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="input-search" class="search-input" placeholder="Search work items by title, ID, reason, or impact..." aria-label="Search work items">
+        <button class="clear-search-btn" id="btn-clear-search" style="display:none;" aria-label="Clear search">&times;</button>
+      </div>
+
+      <div class="filter-controls-group">
+        <div class="filter-select-wrapper">
+          <label for="filter-team" class="sr-only">Team</label>
+          <select id="filter-team" class="filter-select">
+            <option value="ALL">All Teams</option>
+            <!-- Injected dynamically -->
+          </select>
+        </div>
+
+        <div class="filter-select-wrapper">
+          <label for="filter-priority" class="sr-only">Priority</label>
+          <select id="filter-priority" class="filter-select">
+            <option value="ALL">All Priorities</option>
+            <option value="CRITICAL">🔴 Critical</option>
+            <option value="HIGH">🟠 High</option>
+            <option value="MEDIUM">🟡 Medium</option>
+            <option value="LOW">🔵 Low</option>
+          </select>
+        </div>
+
+        <div class="filter-select-wrapper">
+          <label for="filter-type" class="sr-only">Work Item Type</label>
+          <select id="filter-type" class="filter-select">
+            <option value="ALL">All Types</option>
+            <option value="PRODUCTION_INCIDENT">Production Incident</option>
+            <option value="PAYMENT_INVESTIGATION">Payment Investigation</option>
+            <option value="COMPLIANCE_REQUEST">Compliance Request</option>
+            <option value="CUSTOMER_ISSUE">Customer Issue</option>
+            <option value="ENGINEERING_PROBLEM">Engineering Problem</option>
+            <option value="OPERATIONAL_APPROVAL">Operational Approval</option>
+          </select>
+        </div>
+
+        <button class="btn btn-ghost btn-sm" id="btn-reset-filters" title="Reset all filters">
+          Reset Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- Status Tabs Nav -->
+    <nav class="status-tabs-nav" aria-label="Filter by Status">
+      <button class="status-tab active" data-status="ALL">All Items</button>
+      <button class="status-tab" data-status="NEEDS_ATTENTION">Needs Attention <span class="tab-badge" id="tab-badge-attention">0</span></button>
+      <button class="status-tab" data-status="TRIAGED">Triaged</button>
+      <button class="status-tab" data-status="IN_INVESTIGATION">In Investigation</button>
+      <button class="status-tab" data-status="PENDING_APPROVAL">Pending Approval</button>
+      <button class="status-tab" data-status="RESOLVED">Resolved</button>
+      <button class="status-tab" data-status="CLOSED">Closed</button>
+    </nav>
+
+    <!-- Work Item List Content -->
+    <section class="work-items-view">
+      <div class="list-meta-header">
+        <span class="results-count" id="results-count">Loading work items...</span>
+        <div class="pagination-controls" id="pagination-controls">
+          <button class="btn btn-ghost btn-xs" id="btn-prev-page" disabled>Previous</button>
+          <span class="page-indicator" id="page-indicator">Page 1 of 1</span>
+          <button class="btn btn-ghost btn-xs" id="btn-next-page" disabled>Next</button>
+        </div>
+      </div>
+
+      <!-- Live Stale View Banner (Triggered when concurrent update detected via SSE) -->
+      <div class="stale-notification-banner" id="stale-banner" style="display: none;">
+        <div class="stale-banner-content">
+          <span class="stale-icon">⚡</span>
+          <span id="stale-banner-text">A work item in your current view was just updated by another user.</span>
+        </div>
+        <button class="btn btn-sm btn-primary" id="btn-refresh-stale">Refresh View</button>
+      </div>
+
+      <!-- Work Items Table/Cards Container -->
+      <div class="items-table-container">
+        <table class="items-table" id="items-table">
+          <thead>
+            <tr>
+              <th style="width: 100px;">ID & Ver</th>
+              <th>Work Item & Context</th>
+              <th style="width: 140px;">Status</th>
+              <th style="width: 110px;">Priority</th>
+              <th style="width: 160px;">Team</th>
+              <th style="width: 170px;">Responsible Owner</th>
+              <th style="width: 120px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="items-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <div class="empty-icon">📂</div>
+          <h3 class="empty-title">No work items found</h3>
+          <p class="empty-desc">Try clearing your search query or selecting a different status tab.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Work Item Detail Slide-Over Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="detail-drawer" id="detail-drawer" aria-labelledby="drawer-title" aria-modal="true" role="dialog">
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <span class="drawer-item-id" id="drawer-item-id">WI-0000</span>
+        <span class="drawer-version-tag" id="drawer-version-tag" title="Optimistic Concurrency Version">v1</span>
+        <span class="badge" id="drawer-type-badge">TYPE</span>
+      </div>
+      <button class="drawer-close-btn" id="btn-close-drawer" aria-label="Close detail view">&times;</button>
+    </div>
+
+    <!-- Live Stale Warning Banner inside drawer -->
+    <div class="drawer-stale-alert" id="drawer-stale-alert" style="display: none;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <div>
+        <strong>Stale Data Warning:</strong> This item was just updated on the server.
+      </div>
+      <button class="btn btn-xs btn-outline" id="btn-drawer-sync">Sync Now</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Title & Core Reason -->
+      <div class="drawer-section">
+        <h2 class="drawer-title" id="drawer-title">Work Item Title</h2>
+        <div class="drawer-meta-bar">
+          <div class="meta-pill"><span class="meta-label">Status:</span> <span class="badge" id="drawer-status-badge">STATUS</span></div>
+          <div class="meta-pill"><span class="meta-label">Priority:</span> <span class="badge" id="drawer-priority-badge">PRIORITY</span></div>
+          <div class="meta-pill"><span class="meta-label">Team:</span> <strong id="drawer-team-name">Team Name</strong></div>
+        </div>
+      </div>
+
+      <!-- Critical Context: What is it, Why does it exist, Next Action Required -->
+      <div class="drawer-section context-callouts">
+        <div class="context-block reason-block">
+          <h4 class="context-heading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Why This Item Exists
+          </h4>
+          <p id="drawer-reason-text">-</p>
+        </div>
+
+        <div class="context-block impact-block">
+          <h4 class="context-heading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Business & Operational Impact
+          </h4>
+          <p id="drawer-impact-text">-</p>
+        </div>
+
+        <div class="context-block next-action-block">
+          <h4 class="context-heading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            What Requires Attention Next
+          </h4>
+          <p id="drawer-next-action-text">-</p>
+        </div>
+      </div>
+
+      <!-- Operational Responsibility & Actions -->
+      <div class="drawer-section responsibility-section">
+        <div class="responsibility-card">
+          <div class="resp-left">
+            <span class="resp-label">Current Responsible Owner:</span>
+            <div class="resp-owner-display" id="drawer-owner-display">
+              <span class="avatar-circle" id="drawer-owner-avatar">?</span>
+              <div>
+                <strong id="drawer-owner-name">Unassigned</strong>
+                <span class="owner-email" id="drawer-owner-email">No owner currently responsible</span>
+              </div>
+            </div>
+          </div>
+          <div class="resp-right">
+            <button class="btn btn-primary btn-sm" id="btn-drawer-claim">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              Take Responsibility
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow State Machine Transitions -->
+      <div class="drawer-section workflow-transitions-section">
+        <h4 class="section-title">Workflow Actions & Transitions</h4>
+        <div class="transition-buttons-grid" id="transition-buttons-container">
+          <!-- Populated dynamically based on current status and role -->
+        </div>
+
+        <!-- Inline Transition Form (for Resolution Summary / Approval Role) -->
+        <div class="transition-form-box" id="transition-form-box" style="display: none;">
+          <h5 id="transition-form-title">Complete Transition</h5>
+          <div id="transition-fields">
+            <!-- Dynamic fields (e.g. resolution summary textarea) -->
+          </div>
+          <div class="transition-form-actions">
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-transition">Cancel</button>
+            <button class="btn btn-primary btn-sm" id="btn-submit-transition">Confirm Transition</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resolution Summary Display if Resolved/Closed -->
+      <div class="drawer-section resolution-display-box" id="drawer-resolution-box" style="display: none;">
+        <h4 class="section-title text-success">✓ Resolution Summary</h4>
+        <p id="drawer-resolution-text"></p>
+      </div>
+
+      <!-- Description Details -->
+      <div class="drawer-section">
+        <h4 class="section-title">Description & Investigation Notes</h4>
+        <div class="description-content" id="drawer-description-text"></div>
+      </div>
+
+      <!-- Chronological Collaboration & Audit Timeline -->
+      <div class="drawer-section timeline-section">
+        <div class="timeline-header">
+          <h4 class="section-title">Collaboration & Immutable Audit History</h4>
+          <span class="timeline-count" id="drawer-audit-count">0 events</span>
+        </div>
+
+        <!-- Add Comment Form -->
+        <div class="add-comment-box">
+          <textarea id="input-comment" class="comment-textarea" placeholder="Add an investigation update, handoff note, or collaboration comment..." rows="2"></textarea>
+          <div class="comment-box-actions">
+            <button class="btn btn-primary btn-sm" id="btn-submit-comment">Post Comment</button>
+          </div>
+        </div>
+
+        <div class="timeline-feed" id="drawer-timeline-feed">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Interactive Conflict Resolution Modal (Demonstrates Critical Situation 1 & 2) -->
+  <div class="modal-backdrop" id="conflict-modal-backdrop" style="display: none;">
+    <div class="modal-dialog conflict-modal" role="dialog" aria-labelledby="conflict-modal-title">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="conflict-alert-icon">⚠️</div>
+          <div>
+            <h3 class="modal-title text-danger" id="conflict-modal-title">Concurrency Conflict Detected (HTTP 409)</h3>
+            <p class="modal-subtitle">Another operator modified this work item while you were viewing it.</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-conflict">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="conflict-explanation">
+          To prevent accidental overwrite or lost updates, your changes were rejected by the server's <strong>Optimistic Concurrency Control (OCC)</strong> engine.
+        </p>
+
+        <div class="conflict-diff-grid">
+          <div class="diff-card">
+            <div class="diff-card-header text-muted">Your Stale View (<span id="conflict-client-version">v1</span>)</div>
+            <div class="diff-card-body" id="conflict-client-diff">
+              <!-- Rendered diff -->
+            </div>
+          </div>
+          <div class="diff-card active-server">
+            <div class="diff-card-header text-primary">Current Server State (<span id="conflict-server-version">v2</span>)</div>
+            <div class="diff-card-body" id="conflict-server-diff">
+              <!-- Rendered server state -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-conflict-dismiss">Dismiss</button>
+        <button class="btn btn-primary" id="btn-conflict-accept">Accept Server State & Reload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create New Work Item Modal -->
+  <div class="modal-backdrop" id="create-modal-backdrop" style="display: none;">
+    <div class="modal-dialog create-modal" role="dialog" aria-labelledby="create-modal-title">
+      <div class="modal-header">
+        <h3 class="modal-title" id="create-modal-title">Create Operational Work Item</h3>
+        <button class="modal-close-btn" id="btn-close-create">&times;</button>
+      </div>
+      <form id="create-item-form">
+        <div class="modal-body form-grid">
+          <div class="form-group col-span-2">
+            <label for="create-title">Item Title <span class="text-danger">*</span></label>
+            <input type="text" id="create-title" class="form-input" required placeholder="Clear, actionable title describing the issue...">
+          </div>
+
+          <div class="form-group">
+            <label for="create-type">Work Item Type <span class="text-danger">*</span></label>
+            <select id="create-type" class="form-select" required>
+              <option value="CUSTOMER_ISSUE">Customer Issue</option>
+              <option value="ENGINEERING_PROBLEM">Engineering Problem</option>
+              <option value="PAYMENT_INVESTIGATION">Payment Investigation (Confidential)</option>
+              <option value="PRODUCTION_INCIDENT">Production Incident</option>
+              <option value="COMPLIANCE_REQUEST">Compliance Request (Confidential)</option>
+              <option value="OPERATIONAL_APPROVAL">Operational Approval</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="create-priority">Initial Priority <span class="text-danger">*</span></label>
+            <select id="create-priority" class="form-select" required>
+              <option value="CRITICAL">🔴 Critical (Revenue/Safety risk)</option>
+              <option value="HIGH" selected>🟠 High (Major impairment)</option>
+              <option value="MEDIUM">🟡 Medium (Normal operations)</option>
+              <option value="LOW">🔵 Low (Minor/Routine)</option>
+            </select>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="create-team">Owning Team <span class="text-danger">*</span></label>
+            <select id="create-team" class="form-select" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="create-reason">Why Does This Item Exist? <span class="text-danger">*</span></label>
+            <textarea id="create-reason" class="form-textarea" rows="2" required placeholder="Root cause, alert origin, statutory mandate, or trigger event..."></textarea>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="create-impact">Business & Operational Impact <span class="text-danger">*</span></label>
+            <textarea id="create-impact" class="form-textarea" rows="2" required placeholder="Revenue loss, client impact, SLA countdown, or regulatory penalty..."></textarea>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="create-next-action">What Requires Attention Next?</label>
+            <input type="text" id="create-next-action" class="form-input" placeholder="e.g. Memory dump analysis, payment trace check, compliance sign-off...">
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="create-description">Detailed Description & Evidence <span class="text-danger">*</span></label>
+            <textarea id="create-description" class="form-textarea" rows="3" required placeholder="Reproduction steps, stack traces, transaction IDs, customer details..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-create">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-create">Create Work Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Demonstration Simulator Drawer -->
+  <aside class="simulation-drawer" id="simulation-drawer" style="display: none;">
+    <div class="sim-header">
+      <div class="sim-title-wrap">
+        <span class="sim-badge">Interactive Lab</span>
+        <h3 class="sim-title">Critical System Behaviour Demonstrator</h3>
+      </div>
+      <button class="drawer-close-btn" id="btn-close-simulation">&times;</button>
+    </div>
+
+    <div class="sim-body">
+      <p class="sim-intro">
+        Demonstrates the situations where correctness requires more than simple CRUD operations (per Newtonite Candidate Brief pages 3, 4 & 5).
+      </p>
+
+      <!-- Scenario 1: Race Condition -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-scenario-num">1</span>
+          <div>
+            <h4 class="sim-card-title">Concurrent Claim Race Condition</h4>
+            <span class="sim-card-tag">Optimistic Concurrency Control (OCC)</span>
+          </div>
+        </div>
+        <p class="sim-card-desc">
+          Simulates Alice Chen and Bob Miller concurrently firing a claim request for the same work item at the exact same version token.
+        </p>
+        <button class="btn btn-outline btn-sm w-full" id="btn-run-race-claim">
+          Trigger Simultaneous Claim Race
+        </button>
+        <div class="sim-output" id="output-race-claim" style="display: none;"></div>
+      </div>
+
+      <!-- Scenario 2: Idempotency Duplicate Detection -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-scenario-num">2</span>
+          <div>
+            <h4 class="sim-card-title">Duplicate Submission Deduplication</h4>
+            <span class="sim-card-tag">Idempotency-Key Engine</span>
+          </div>
+        </div>
+        <p class="sim-card-desc">
+          Simulates an uncertain user or network timeout repeating a request with the same <code>Idempotency-Key</code> header.
+        </p>
+        <button class="btn btn-outline btn-sm w-full" id="btn-run-idempotency">
+          Simulate Repeated Request (Idempotent Cache)
+        </button>
+        <div class="sim-output" id="output-idempotency" style="display: none;"></div>
+      </div>
+
+      <!-- Scenario 3: Asynchronous Outbox & Retry -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-scenario-num">3</span>
+          <div>
+            <h4 class="sim-card-title">Reliable Asynchronous Outbox Worker</h4>
+            <span class="sim-card-tag">Exponential Backoff & Dead-Letter</span>
+          </div>
+        </div>
+        <p class="sim-card-desc">
+          Enqueues a secondary job that triggers an upstream timeout, demonstrating automatic retries, backoff, and dead-letter classification.
+        </p>
+        <button class="btn btn-outline btn-sm w-full" id="btn-run-outbox-failure">
+          Inject Async Job Failure & Backoff
+        </button>
+        <div class="sim-output" id="output-outbox-failure" style="display: none;"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast Notification Center -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

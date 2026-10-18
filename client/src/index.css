@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F8F9FB;
+    color: #20242C;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #EEF1FD;
+    color: #3D4BC9;
+  }
+}
+
+/* Subtle, refined scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E2E4EB;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C4C8D4;
+}
+
+/* Restrained input focus style */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #4F5FE8 !important;
+  box-shadow: 0 0 0 3px rgba(79, 95, 232, 0.12) !important;
+}
+
+/* Microinteraction button active state */
+button:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
