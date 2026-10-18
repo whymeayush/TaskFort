@@ -1,11 +1,10 @@
 services:
   - type: web
-    name: taskfort-backend
-    runtime: node
+    name: taskfort
+    env: node
     plan: free
     region: oregon
-    rootDir: server
-    buildCommand: npm install
+    buildCommand: npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:

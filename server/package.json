@@ -5,6 +5,7 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
+    "build": "echo 'Server ready'",
     "start": "node src/server.js",
     "dev": "node src/server.js",
     "seed": "node src/seeds/seed.js",
