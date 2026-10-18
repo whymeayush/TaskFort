@@ -1,7 +1,8 @@
 {
-  "name": "newtonite-operations-hub",
+  "name": "taskfort-platform",
   "version": "1.0.0",
-  "description": "Newtonite Operations Hub — Operational Work Management Platform Under Pressure",
+  "description": "Taskfort — Where work gets done. Operational Work Management Platform",
+  "type": "module",
   "scripts": {
     "start": "node server/src/server.js",
     "seed": "node server/src/seeds/seed.js",
@@ -9,15 +10,32 @@
     "dev": "node server/src/server.js",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
-    "build": "npm --prefix client run build"
+    "build": "npm --prefix client run build",
+    "vercel-build": "npm --prefix client install && npm --prefix client run build"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.4",
+    "morgan": "^1.10.1",
+    "uuid": "^13.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.1.0"
   },
   "keywords": [
-    "newtonite",
+    "taskfort",
     "operations",
     "mern",
     "concurrency",
     "idempotency"
   ],
-  "author": "Newtonite Engineering Candidate",
+  "author": "Ayush Tiwari",
   "license": "ISC"
 }
