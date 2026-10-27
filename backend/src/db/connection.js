@@ -36,7 +36,8 @@ export async function connectDB(customUri = null) {
     console.log('[Database] Connecting to MongoDB...');
     cached.promise = mongoose.connect(uri, {
       autoIndex: true,
-      serverSelectionTimeoutMS: 8000
+      serverSelectionTimeoutMS: 8000,
+      dbName: process.env.MONGODB_DB_NAME || 'taskfort'
     }).then((m) => {
       console.log('[Database] MongoDB connection established successfully. Transactions supported.');
       return m;

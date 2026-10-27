@@ -5,9 +5,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env from current working directory or server root
+// Load .env from current working directory, backend root, and monorepo root
 dotenv.config();
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '..', '..', '..', '.env') });
 
 export const config = {
   PORT: process.env.PORT || 5000,
