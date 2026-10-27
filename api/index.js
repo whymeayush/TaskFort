@@ -17,7 +17,11 @@ export default async function handler(req, res) {
       isSeeded = true;
     }
   } catch (err) {
-    console.error('[Vercel] Database initialization warning:', err.message);
+    console.error('[Database Connection Error]:', err.message);
+    return res.status(503).json({
+      error: 'DATABASE_CONNECTION_ERROR',
+      message: `Database connection failed: ${err.message}. If deployed on Vercel, please check that MONGODB_URI is configured and MongoDB Atlas allows access from anywhere (0.0.0.0/0).`
+    });
   }
 
   return app(req, res);

@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -55,8 +56,13 @@ app.use('/api/simulation', simulationRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'HEALTHY',
+  const dbStates = ['DISCONNECTED', 'CONNECTED', 'CONNECTING', 'DISCONNECTING'];
+  const dbState = dbStates[mongoose.connection.readyState] || 'UNKNOWN';
+  const isHealthy = mongoose.connection.readyState === 1;
+
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? 'HEALTHY' : 'DEGRADED',
+    database: dbState,
     service: 'Newtonite Operations Hub Backend (MERN)',
     timestamp: new Date().toISOString()
   });

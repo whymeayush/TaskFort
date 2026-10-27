@@ -35,10 +35,14 @@ export async function connectDB(customUri = null) {
   if (!cached.promise) {
     console.log('[Database] Connecting to MongoDB...');
     cached.promise = mongoose.connect(uri, {
-      autoIndex: true
+      autoIndex: true,
+      serverSelectionTimeoutMS: 8000
     }).then((m) => {
       console.log('[Database] MongoDB connection established successfully. Transactions supported.');
       return m;
+    }).catch((err) => {
+      cached.promise = null;
+      throw err;
     });
   }
 
