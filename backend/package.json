@@ -1,5 +1,5 @@
 {
-  "name": "newtonite-operations-hub-server",
+  "name": "backend",
   "version": "1.0.0",
   "description": "Newtonite Operations Hub - Resilient Backend Services",
   "type": "module",

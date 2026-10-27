@@ -50,11 +50,9 @@
 - *Zero External DB Setup*: A managed MongoDB Replica Set with WiredTiger transactions starts automatically when no external URI is provided.
 
 ### 1. Monorepo Installation
-Clone or open the repository, then install dependencies for the server and client:
+Clone or open the repository, then install all workspace dependencies from root:
 ```powershell
-# In the repository root
-npm --prefix server install
-npm --prefix client install
+npm install
 ```
 
 ### 2. Database Initialization & Seeding
@@ -66,18 +64,19 @@ npm run seed
 ### 3. Build & Run the Application
 You can run the application in production mode (where Express serves the compiled React app):
 ```powershell
-# Build client and start backend on port 5000
+# Build frontend and start backend on port 5000
 npm run build
 npm start
 ```
 
 Or run in development mode with hot-reloading:
 ```powershell
-# Terminal 1: Backend API (port 5000)
-npm run dev:server
+# Start both applications concurrently:
+npm run dev
 
-# Terminal 2: React Frontend (port 3000)
-npm run dev:client
+# Or run independently:
+npm run dev --workspace=backend   # Backend API (port 5000)
+npm run dev --workspace=frontend  # React Frontend (port 3000)
 ```
 
 Open your browser at:
@@ -145,32 +144,46 @@ The application includes an interactive **Live Persona Switcher** in the top nav
 
 ## 📁 Repository Directory Structure
 
-```
-newtonite-operations-hub/
-├── client/                          # React 18 + Vite + Tailwind CSS SPA
+```text
+management-work/
+├── frontend/                        # React 18 + Vite + Tailwind CSS SPA
+│   ├── public/                      # Static assets and legacy UI assets
 │   ├── src/
-│   │   ├── api/client.js            # Axios client with JWT & Idempotency interceptors
-│   │   ├── context/AuthContext.jsx  # Multi-user session & persona switcher
+│   │   ├── api/client.js            # Axios client adapter (delegates to services/api.js)
 │   │   ├── components/              # MetricCards, StatusBadges, ActivityTimeline, ConflictModal
+│   │   ├── context/AuthContext.jsx  # Multi-user session & persona switcher
 │   │   ├── pages/                   # 16 views (Dashboard, WorkItems, Detail, Create, Teams, Lab, etc.)
+│   │   ├── services/api.js          # Browser API service layer with JWT & Idempotency key interceptors
+│   │   ├── styles/                  # Application stylesheet layer
 │   │   ├── App.jsx                  # Protected layout & React Router v6 configuration
+│   │   ├── index.css                # Tailwind CSS root stylesheet
 │   │   └── main.jsx                 # QueryClientProvider & React DOM mount
 │   ├── vite.config.js               # Proxy to backend port 5000
-│   └── package.json
-├── server/                          # Node.js + Express.js + Mongoose Backend
+│   ├── tailwind.config.js           # Tailwind CSS configuration
+│   ├── .env.example                 # Frontend environment variables template
+│   ├── README.md                    # Frontend guide
+│   └── package.json                 # Frontend workspace configuration
+├── backend/                         # Node.js + Express.js + Mongoose Backend
+│   ├── api/index.js                 # Serverless deployment API entrypoint
 │   ├── src/
 │   │   ├── config/index.js          # Environment configuration
 │   │   ├── db/connection.js         # Managed MongoDB Replica Set with WiredTiger transactions
 │   │   ├── models/                  # User, Team, TeamMembership, WorkItem, ActivityLog, etc.
 │   │   ├── middleware/              # auth.js, rbac.js, idempotency.js, errorHandler.js
-│   │   ├── services/                # workItemService, assignmentService, workflowService, auditService
+│   │   ├── services/                # workItemService, assignmentService, workflowService, auditService, outboxService, eventStream
 │   │   ├── controllers/             # REST API controllers
 │   │   ├── routes/                  # Modular route declarations
 │   │   ├── seeds/seed.js            # Pre-configured operational scenarios
 │   │   ├── app.js                   # Express application setup & static SPA serving
+│   │   ├── config.js                # Re-exported config module
 │   │   └── server.js                # Server entry point & graceful shutdown
 │   ├── tests/                       # Automated test suites (Auth, RBAC, OCC, Idempotency, etc.)
-│   └── package.json
+│   ├── data/                        # Embedded database storage
+│   ├── .env.example                 # Backend environment variables template
+│   ├── README.md                    # Backend guide
+│   └── package.json                 # Backend workspace configuration
+├── api/
+│   └── index.js                     # Root serverless redirector to backend/api/index.js
 ├── docs/
 │   ├── REQUIREMENTS_TRACEABILITY.md # Exhaustive mapping across all 6 pages of the brief
 │   ├── IMPLEMENTATION_PLAN.md       # Technical milestone roadmap
@@ -180,7 +193,7 @@ newtonite-operations-hub/
 ├── ENGINEERING_DECISIONS.md         # In-depth analysis of 8 architectural choices
 ├── .env.example                     # Environment template
 ├── README.md                        # Master setup & documentation guide
-└── package.json                     # Monorepo root scripts
+└── package.json                     # Monorepo root workspaces & orchestration scripts
 ```
 
 ---

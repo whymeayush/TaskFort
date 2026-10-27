@@ -39,3 +39,5 @@ api.interceptors.response.use((response) => {
 export function generateIdempotencyKey(prefix = 'req') {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
+
+export default api;

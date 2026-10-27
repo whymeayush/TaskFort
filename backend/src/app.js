@@ -21,6 +21,8 @@ import approvalsRouter from './routes/approvals.js';
 import notificationsRouter from './routes/notifications.js';
 import dashboardRouter from './routes/dashboard.js';
 import simulationRouter from './routes/simulation.js';
+import eventsRouter from './routes/events.js';
+import outboxRouter from './routes/outbox.js';
 
 const app = express();
 
@@ -53,6 +55,8 @@ app.use('/api/approvals', approvalsRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/simulation', simulationRouter);
+app.use('/api/events', eventsRouter);
+app.use('/api/outbox', outboxRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -69,7 +73,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve compiled React frontend if present
-const clientDist = path.join(__dirname, '..', '..', 'client', 'dist');
+const clientDist = path.join(__dirname, '..', '..', 'frontend', 'dist');
 if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.use((req, res, next) => {

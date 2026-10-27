@@ -19,3 +19,5 @@ export const config = {
   MAX_PAGE_SIZE: 100,
   DB_STORAGE_PATH: path.join(__dirname, '..', '..', 'data', 'db')
 };
+
+export default config;
